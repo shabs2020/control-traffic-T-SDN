@@ -1,3 +1,5 @@
+from matplotlib.ticker import FixedFormatter, FixedLocator
+
 import RMSA as rs
 import CTModelling
 import math
@@ -58,15 +60,19 @@ def plot_create_hist1(netconf_traffic, y_label, yscale1, yscale2, imagename, ann
     for t in range(0, 50):
         x1.append(netconf_traffic[t][0])
         x2.append(round(netconf_traffic[t][1], 2))
+
+
         # x1.append(t[0])
         # x2.append(round(t[1], 3))
+    print('x1 {}'.format(x1))
     print('x2 {}'.format(x2))
-    conn = np.arange(50)
+    conn = np.arange(start=1, stop=51)
+    print(conn)
     print(max(x1))
     fig, ax1 = plot.subplots(figsize=(12, 5.3))
     # figsize=(40, 30)
     color = 'tab:blue'
-    ax1.set_xlabel('Lightpath Request ID', fontsize=20)
+    ax1.set_xlabel('Lightpath ID', fontsize=20)
     ax1.set_ylabel('Netconf traffic volume [MB]', color=color, fontsize=18)
     ax1.bar(conn, x2, color=color)
     ax1.tick_params(axis='y', labelcolor=color)
@@ -78,7 +84,8 @@ def plot_create_hist1(netconf_traffic, y_label, yscale1, yscale2, imagename, ann
     ax2.plot(conn, x1, 's', color=color, linewidth=0.75)
 
     ax2.tick_params(axis='y', labelcolor=color)
-    ax1.set_xlim(-1, 50)
+
+  #  ax1.set_xlim(0, 51)
     ax1.set_ylim(yscale1)
     ax2.set_ylim(yscale2)
     ax1.yaxis.labelpad = 0
@@ -91,6 +98,15 @@ def plot_create_hist1(netconf_traffic, y_label, yscale1, yscale2, imagename, ann
     # ax1.axhline(y=y_max, xmin=-1, xmax=121, linewidth=2, color='b', linestyle='dotted')
     # ax1.axhline(y=y_min, xmin=-1, xmax=121, linewidth=2, color='b',linestyle='dashed')
     plot.annotate(s, annotation, fontsize=18)
+    #plot.xticks(np.arange(len(conn)), np.arange(1, len(conn) + 1))
+   # plot.xticks(conn)
+    #plot.xticks(range(1,50,5))
+    x_formatter = FixedFormatter([1,5,10,15,20,25,30,35,40,45,50])
+    x_locator = FixedLocator([1,5,10,15,20,25,30,35,40,45,50])
+    ax2.xaxis.set_major_formatter(x_formatter)
+    ax2.xaxis.set_major_locator(x_locator)
+
+
     plot.tight_layout()
     plot.savefig(imagename + ".eps", format='eps', dpi=1200, pad_inches=0)
     # bbox_inches='tight'
